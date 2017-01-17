@@ -2,8 +2,25 @@ Reports and other dev notes
 =====
 
 ### Contents
-  - [Business Logic](#business-logic)
-    - [Triggers](#triggers)
+- [Lab config](#lab-config)
+  - [Port Assignments](#port-assignments)
+  - [Network Storage](#network-storage)
+- [Business Logic](#business-logic)
+  - [Triggers](#triggers)
+
+## Lab Config
+Resources allocated / accessible in the B203 lab.
+
+### Port Assignments
+- Inter machine communication: `444430` -> `444439`
+- Quote server: `quoteserve.seng.uvic.ca:4443`
+
+### Network Storage
+Can do local installs for software here. Has a 2TB capacity.
+- `/seng/seng462/group3`
+  - Private but slow
+- `/seng/scratch/group3`
+  - _Not_ private
 
 ## Business Logic
 Clarifies ambiguous situations in the [user command document][command_doc].
