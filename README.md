@@ -26,7 +26,7 @@ Can do local installs for software here. Has a 2TB capacity.
 ## Business Logic
 Clarifies ambiguous situations in the [user command document][command_doc].
 
-#### BUY
+### BUY
 **BUY needs a fresh quote from a user**
 
 Quotes expire in 60s
@@ -63,7 +63,7 @@ Users can buy `(buy_amount % stock_price)` number of stocks.
 [3] BUY,userA,XYZ,50  << $45 removed from userA and placed in reserve
 ```
 
-#### Triggers
+### Triggers
 **Multiple triggers for same stock same account**
 
 Overwrite any pre-existing buys or sells
