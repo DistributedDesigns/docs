@@ -11,7 +11,7 @@ Unless otherwise stated, all modules will be written in Go 1.7.4. Go has excepti
 Transactions will be sent to the load balancer at the TCP socket level, using a pre-defined serialization format very similar to what is provided in the workload files.
 
 ### Client front end
-A frontend server will host static-ish pages that allows clients to log in, view their accounts and execute trades. Interaction should ideally use REST but we'll probably end up sending data back and forth through web forms because it's faster to develop. Amount of polish and technology choice will heavily depend on how quickly we can scale to a full workload. Ideally, this should use a modern web development package like React or Vue.
+A frontend server will host static-ish pages that allows clients to log in, view their accounts and execute trades. Interaction should use REST but we'll probably end up sending data back and forth through web forms because it's faster to develop. Amount of polish and technology choice will heavily depend on how quickly we can scale to a full workload. Ideally, this should use a modern web development package like React or Vue.
 
 Web page will do cursory input sanitization and validation (e.g. reject a purchase for negative dollars but checks against user account quantities such as stock holdings will occur later.)
 
@@ -34,6 +34,9 @@ The quote cache maintains a list of all active quotes in the system by listening
 ### User accounts
 There is no clear requirement for user accounts to exist on a persistent database. The state of a user account is recoverable from the Audit Server. There are no cross-account queries, aside from the system status dump that is performed by the Audit Server. The first development cycle will use an in-memory data structure to hold user account data. If performance suffers we'll examine a Postgres implementation.
 
+### Pending buy / sell
+Details for pending buy and sell actions will be stored in Redis with a TTL to enforce the transaction validity window.
+
 ### Automatic transactions
 The worker maintains a list of each user's ATXs. This list has no functionality other than mirroring the state of the consolidated Auto Transaction Manager (ATM) for the worker's accounts. Updates to this list are echoed to the ATM for execution. The worker is responsible for maintaining the validity of ATXs (e.g. an ATX is not valid if it receives a trigger without a pre-existing amount).
 
@@ -48,7 +51,7 @@ Communication between the workers and consolidated applications will use Rabbit 
 RMQ is used instead of 0MQ because of its support for rich message publication patterns.
 
 ### Auto transaction messages
-Messages from the workers will fan-in to the ATM for processing. These messages will be buy and cancel events for triggers and amounts. Workers will subscribe to messages about their accounts. When an ATX triggers an event will be published for the corresponding worker.
+Messages from the workers will fan-in to the ATM for processing. These messages will be buy and cancel events for triggers and amounts. Workers will subscribe to messages about their accounts. When an ATX triggers an event will be published for the corresponding account.
 
 ### Quote messages
 On a local cache miss, workers will issue a fan-in message requesting a new quote to the Quote Manager. When the Quote Manager gets a new quote it issues a fan-out message to all workers.
@@ -71,4 +74,4 @@ Logs external quoteserver hits and parsed transactions _only_. The log will conf
 ### Runtime log
 Each event is logged to a single line using a custom logging format that associates log messages to exact lines of code. This will provide a much finer grain event resolution than the audit log.
 
-These events could be written to the audit log but the XML schema makes it very difficult to parse the logs. For example, a single event is spread across an unknown number of lines making it very difficult to process logs line-by-line using standard Unix utilities like `grep`, `tail` and `awk`.
+These events could be written to the audit log but the XML schema adds friction to log parsing. For example, a single event is spread across an unknown number of lines making it very difficult to process logs line-by-line using standard Unix utilities like `grep`, `tail` and `awk`.
