@@ -5,7 +5,7 @@ Architecture
 ## Overview
 We'll be using a sharded architecture to exploit parallelism in the transaction set. No transactions allow users to interact with each other so user data doesn't need to be consolidated. All transactions for a user will be sent to a single worker. The user base will be evenly split between workers. Full worker responsibilities are detailed later.
 
-Unless otherwise stated, all modules will be written in Go 1.7.4. Go has exceptional support for concurrent code execution and offers a fast runtime environment.
+Unless otherwise stated, all modules will be written in Go 1.7.4. Go has exceptional support for concurrent code execution and offers a fast runtime environment. Unit testing, benchmarking and profiling functionality is included in the standard library. Installation on lab machines will be simple because Go binaries are dependency free and can be cross-compiled.
 
 ## Incoming traffic
 Transactions will be sent to the load balancer at the TCP socket level, using a pre-defined serialization format very similar to what is provided in the workload files.
