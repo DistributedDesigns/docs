@@ -1,6 +1,8 @@
 Reports and other dev notes
 =====
 
+![architecture](./reports/architecture/graphics/arch.png)
+
 ### Contents
 - [Lab config](./lab_config/lab_config.md)
   - [Go Setup](./lab_config/lab_config.md#go-setup)
@@ -11,3 +13,5 @@ Reports and other dev notes
 - [Business Logic](./business_logic/business_logic.md)
   - [BUY](./business_logic/business_logic.md#buy)
   - [Triggers](./business_logic/business_logic.md#triggers)
+- [Reports](./reports/reports.md)
+  - [Architecture](./reports/architecture/architecture.md)
