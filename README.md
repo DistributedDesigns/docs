@@ -14,4 +14,4 @@ Reports and other dev notes
   - [BUY](./business_logic/business_logic.md#buy)
   - [Triggers](./business_logic/business_logic.md#triggers)
 - [Reports](./reports/reports.md)
-  - [Architecture](./reports/architecture/architecture.md)
+  - [Architecture](./reports/architecture/readme.md)
