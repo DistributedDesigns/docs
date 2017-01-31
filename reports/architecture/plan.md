@@ -8,7 +8,7 @@ In the interest of stress testing a known poor design, the monolith processed th
 ## Timeline
 
 | Period | Activities | Deadlines |
-|---|---|
+|---|---|---|
 |01-30| Build message queue prototypes with RMQ and 0MQ. Write helper packages (logger, workload generator, currency, data types). |none|
 |02-06| Start worker implementation (state machine, quote cache, user accounts, buy/sell). Write Quote Manager, Audit Server. Implement message bus. |~~10 users~~|
 |02-13| (Reading break) Automate installation in lab environment. Implement auto transactions on worker and manager. |none|
