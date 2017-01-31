@@ -26,6 +26,8 @@ The project must support at minimum the following commands:
 
 Additionally, the system must support a minimum of 1000 users.
 
+Finally, the system must have a frontend client which allows the user to navigate the system.
+
 Architecture
 ===
 ![architecture](./graphics/arch.png)
