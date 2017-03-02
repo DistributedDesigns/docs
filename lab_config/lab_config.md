@@ -106,6 +106,9 @@ VBoxManage startvm ${VM_NAME} --type headless
 
 # After ~5sec you can SSH into the VM
 ssh -p ${SSH_PORT} root@b${MACHINE}.seng.uvic.ca
+
+# When finished, gracefully shut down the VM
+VBoxManage controlvm ${VM_NAME} acpipowerbutton
 ```
 
 VM setup is automated with [this script][gist-vm-setup].
