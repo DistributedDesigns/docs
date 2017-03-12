@@ -50,13 +50,16 @@ The tail values are
 tail(sort(allDelays), 10)
 ```
 
-Choosing an initial response timeout of 20 milliseconds and 5 millisecond exponential backoff requires 4 iterations to exceed the expected delay. This event has a likelihood of 1.3761%. Exceeding 1 second total delay has a likelihood of 0.2545%
+Choosing an initial response timeout of 20 milliseconds and 5 millisecond exponential backoff requires 6 iterations to exceed the expected delay. This event has a likelihood of 0.1614%. Exceeding 1 second total delay has a likelihood of 0.0299%
 ```{r likelihoods, include = FALSE}
 # Compute the values for the above analysis but don't include in the pdf
-total = 20
+base = 20
+backoff = 5
+total = 0
 i = 1
 while (total <= ev) {
-  total = total + 5**i
+  backoff = backoff*2
+  total = total + base + backoff
   i = i + 1
 }
 print(i - 1) # total iterations
