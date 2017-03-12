@@ -25,9 +25,10 @@ plot(h,
      )
 ```
 
-The expected response time is
-```{r expected resp delay}
+The expected response time in milliseconds is
+```{r expected resp delay, echo=FALSE}
 ev = weighted.mean(h$counts, (h$counts / sum(h$counts)))
+print(ev)
 ```
 
 The above historgram uses one second buckets and hides the fact that the delays are clustered after whole second values. Removing the constant delay portion from each bucket yeilds the distribution of variable network and processing delays.
