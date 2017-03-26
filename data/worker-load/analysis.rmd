@@ -60,7 +60,7 @@ legend(xrange[1],
        col = colors,
        lwd = 1
        )
-legend(xrange[length(xrange)] - 5, # right align
+legend(xrange[length(xrange)] - 3, # right align
        yrange[2],
        1:numWorkers,
        cex = 0.8,
