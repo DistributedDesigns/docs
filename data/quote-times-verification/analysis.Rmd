@@ -1,0 +1,55 @@
+---
+title: "Quoteserver response time verification"
+author: "Tyler Stephen"
+date: '2017-03-26'
+output: pdf_document
+---
+```{r read data, echo=FALSE}
+quotes <- read.csv("quotes.csv", header = T, col.names = c("time", "attempts"))
+quotes$time <- quotes$time / 1e6 # convert ns -> ms
+```
+What's the response time distribution for single attempt quotes? (times in ms)
+```{r single attempt times, echo=FALSE}
+singleAttempts <- subset(quotes, attempts==1)
+quantile(singleAttempts$time, c(.95, .99, .995))
+```
+The initial test of the quoteserver inidicated that the tail of the response times would be bounded by 20ms. This data -- measured from the quote requesting service instead of a bash script -- indicates that almost all responses will resolve before 10ms.
+
+```{r quick attempts, echo=FALSE}
+quickAttempts <- subset(singleAttempts, time < 10)
+h = hist(quickAttempts$time, plot=F)
+plot(h,
+     freq = F,
+     col  = "lightgreen",
+     ylim = range(0,1),
+     ylab = "Relative frequency",
+     xlim = range(0, 10),
+     xlab = "Response time (ms)",
+     main = bquote("Single attempt response time," ~ n == 2727)
+     )
+```
+
+We changed the request timeout to 10ms and re-ran the test.
+
+```{r hist, echo=FALSE}
+htime = hist(quotes$time, plot=F)
+htime$density = htime$density * 1e1 # change density to percents
+plot(htime,
+     freq = F,
+     col  = "lightgreen",
+     ylim = range(0,0.2),
+     ylab = "Relative frequency",
+     xlab = "Response time (ms)",
+     main = bquote("Total time waiting for quote," ~ n == 3964)
+     )
+
+hattempts = hist(quotes$attempts, breaks = c(seq(1, 8)), plot=F)
+plot(hattempts,
+     freq = F,
+     col  = "lightgreen",
+     ylim = range(0,1),
+     ylab = "Relative freqneucy",
+     xlab = "Retry attempts",
+     main = bquote("Times retried before receiving quote," ~ n == 3964)
+     )
+```
