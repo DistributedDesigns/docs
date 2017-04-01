@@ -1,0 +1,124 @@
+---
+title: "Worker Backlog"
+author: "Tyler Stephen"
+date: '2017-04-01'
+output: pdf_document
+---
+
+```{r read data, ref.label="data helpers" echo=FALSE}
+starvation <- readBacklogData("load_1000-starvation.csv")
+bl8w <- readBacklogData("backlog_8w.csv")
+bl9w <- readBacklogData("backlog_9w.csv")
+bl10w <- readBacklogData("backlog_10w.csv")
+bl11w <- readBacklogData("backlog_11w.csv")
+bl12w <- readBacklogData("backlog_12w.csv")
+```
+
+```{r plot backlog evolution with workers, ref.label="plot helpers", ref.label="data helpers", echo=FALSE}
+bl8wTotal <- backlogPerRound(bl8w)
+bl9wTotal <- backlogPerRound(bl9w)
+bl10wTotal <- backlogPerRound(bl10w)
+bl11wTotal <- backlogPerRound(bl11w)
+bl12wTotal <- backlogPerRound(bl12w)
+
+allBacklogTotals <- list(bl8wTotal, bl9wTotal, bl10wTotal, bl11wTotal, bl12wTotal)
+numWorkers <- c(8:12)
+
+maxBacklog <- 0
+maxRounds <- 0
+for (i in 1:length(allBacklogTotals)) {
+  maxBacklogForRun <- max(allBacklogTotals[[i]]$backlog)
+  maxRoundsForRun <- max(allBacklogTotals[[i]]$round)
+  if (maxBacklogForRun > maxBacklog) { maxBacklog <- maxBacklogForRun }
+  if (maxRoundsForRun > maxRounds) { maxRounds <- maxRoundsForRun }
+}
+
+xrange <- range(1, maxRounds)
+yrange <- range(0, maxBacklog)
+
+plot(xrange, yrange,
+     type = "n",
+     xlim = range(0, 40),
+     xlab = "Sending round",
+     ylab = "Total backlog in workers"
+     )
+
+plotTotalWorkerBacklog(allBacklogTotals, numWorkers)
+```
+
+```{r plot starvation, ref.label="plot helpers", echo=FALSE}
+xrange <- range(bl12w$round)
+yrange <- range(0, max(bl12w$backlog))
+
+plot(xrange, yrange,
+     type = "n",
+     xlim = range(0, 30),
+     xlab = "Sending round",
+     ylab = "Backlog in worker"
+     )
+
+plotEachWorkerBacklog(bl12w)
+```
+
+```{r data helpers, echo=FALSE}
+readBacklogData <- function(filename) {
+  cls <- c(round="numeric", worker="numeric", backlog="numeric")
+  backlogData <- read.csv(filename, header = T, colClasses = cls)
+  
+  return(backlogData)
+}
+```
+
+```{r plot helpers, echo=FALSE}
+plotEachWorkerBacklog <- function(d) {
+  numWorkers <- max(d$worker)
+  linetypes <- c(1:numWorkers)
+  plotchars <- seq(14, 14+numWorkers, 1)
+  
+  for (i in 1:numWorkers) {
+    worker_i <- subset(d, worker == i)
+    lines(worker_i$round, worker_i$backlog,
+          type = "b",
+          lwd = 1.5,
+          lty = linetypes[i],
+          pch = plotchars[i]
+          )
+  }
+  
+  legend(max(d$round) + 1, # right align
+         max(d$backlog),   # top of plot area 
+         1:numWorkers,
+         pch = plotchars,
+         title = "Worker"
+         )
+}
+
+backlogPerRound <- function(d) {
+  return(aggregate(backlog ~ round, data = d, sum))
+}
+
+plotTotalWorkerBacklog <- function(aggs, numWorkers) {
+  numRuns <- length(aggs)
+  linetypes <- 2:(numRuns+1)
+  
+  maxRounds <- 0
+  maxBacklog <- 0
+  
+  for (i in 1:numRuns) {
+    d <- aggs[[i]]
+    lines(d$round, d$backlog, lwd = 1.5, lty = linetypes[i])
+    if (max(d$round) > maxRounds) { maxRounds = max(d$round) }
+    if (max(d$backlog) > maxBacklog) { maxBacklog = max(d$backlog) }
+  }
+  
+  if (missing(numWorkers)) { numWorkers <- 1:numRuns }
+  
+  legend(1,          # left align
+         maxBacklog, # top align
+         numWorkers,
+         lwd = 1.5,
+         lty = linetypes,
+         title = "Workers"
+         )
+}
+```
