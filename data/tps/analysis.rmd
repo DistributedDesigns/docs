@@ -16,6 +16,7 @@ w9 <- readTPS("tps_1000u9w.csv")
 w10 <- readTPS("tps_1000u10w.csv")
 w11 <- readTPS("tps_1000u11w.csv")
 w12 <- readTPS("tps_1000u12w.csv")
+f2016 <- readTPS("tps_final2016.csv")
 ```
 
 ```{r plot 100 v. 1000, ref.label="plot helpers", echo=FALSE}
@@ -172,6 +173,31 @@ r2 <- round(summary(fit)$adj.r.squared, 4)
 r2eq <- paste0("R^2 = ", r2)
 mtext(r2eq, 3, line = -3)
 ```
+```{r plot mega quotes, ref.label="plot helpers", echo=FALSE}
+xrange <- range(0, 60)
+maxTPS <- max(w12$tps, f2016$tps)
+yrange <- range(0, maxTPS)
+colors <- c("blue", "red")
+
+plot(xrange, yrange,
+     type = "n",
+     xlab = "Runtime (s)",
+     ylim = c(0, 50000),
+     ylab = "TPS"
+     )
+
+addLine(w12, col = colors[1])
+addLine(f2016, col = colors[2])
+
+legend(xrange[1], yrange[2],
+       c(1000, 2000),
+       cex = 0.8,
+       lwd = 1.5,
+       col = colors,
+       title = "Quotes"
+       )
+```
+
 ```{r plot helpers, echo=FALSE}
 addLine <- function(d, col, lty) {
   if (missing(col)) { col <- "black" }
