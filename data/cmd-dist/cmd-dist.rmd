@@ -1,0 +1,64 @@
+---
+title: "Command time distribution"
+author: "Tyler Stephen"
+date: '2017-04-01'
+output: pdf_document
+---
+
+```{r read data, echo=FALSE}
+names <- c("command", "time")
+cls <- c(command="factor", time="numeric")
+cmdData <- read.csv("cmd_dist.csv", header = T, col.names = names, colClasses = cls)
+cmdData$time <- cmdData$time / 1e3 # convert ns -> μs
+
+names <- c("command","50","95","99","99.5","99.8","99.9","99.99")
+cls <- c("factor", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric")
+cmdQuantiles <- read.csv("cmd_quantiles.csv", header = T, col.names = names, colClasses = cls)
+```
+
+```{r quantile logger, echo=FALSE}
+# Have to hand craft what this spits out into cmd_quantiles.csv because I am a scrubbbb
+quantiles <- c(.5, .95, .99, .995, .998, .999, .9999)
+for (cmdName in levels(cmdData$command)) {
+  cmdSubset <- cmdData[cmdData$command %in% cmdName,]
+  print(cat(cmdName, quantile(cmdSubset$time, quantiles))) # converted into cmd_quantiles.csv... manually
+}
+
+cmdQuantiles
+```
+
+```{r hist plots, echo=FALSE}
+cmdHist <- function(cmdName, threshold) {
+ cmdSubset <- cmdData[cmdData$command %in% cmdName,]
+ cmdSubset <- subset(cmdSubset, time < threshold)
+ hist(cmdSubset$time,
+      xlab = "Execution time (μs)",
+      main = sprintf("Histogram of %s, n = %d", cmdName, length(cmdSubset$time))
+      )
+}
+
+cmdHist("ADD", 75)
+cmdHist("BUY", 600)
+cmdHist("CANCEL_BUY", 75)
+cmdHist("CANCEL_SELL", 60)
+cmdHist("CANCEL_SET_BUY", 60)
+cmdHist("CANCEL_SET_SELL", 60)
+cmdHist("COMMIT_BUY", 75)
+cmdHist("COMMIT_SELL", 50)
+cmdHist("DISPLAY_SUMMARY", 50)
+cmdHist("DUMPLOG", 50000)
+cmdHist("QUOTE", 600)
+cmdHist("SELL", 600)
+cmdHist("SET_BUY_AMOUNT", 60)
+cmdHist("SET_BUY_TRIGGER", 60)
+cmdHist("SET_SELL_AMOUNT", 60)
+cmdHist("SET_SELL_TRIGGER", 60)
+
+# Quotes are special. The above histogram is windowed to only show retrieval from cache. What about those from the service?
+svcQuotes <- subset(cmdData[cmdData$command %in% "QUOTE",], time > 1e3) # quotes that took longer than 1ms
+svcQuotes$time <- svcQuotes$time / 1e3 # convert μs -> ms
+hist(svcQuotes$time,
+     xlab = "Execution time (ms)",
+     main = sprintf("Histogram of non-cached QUOTE, n = %d", length(svcQuotes$time))
+     )
+```
