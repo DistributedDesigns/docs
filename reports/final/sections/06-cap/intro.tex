@@ -1,1 +1,9 @@
 \chapter{Capacity planning}
+Progressing through the series of workload files stresses different parts of the trading system architecture.
+Workload files differ by the number of unique users, quotes and total transactions.
+Early workload files have few unique users and quotes but rapidly increase the number of transactions.
+The primary design goal becomes minimizing individual transaction times.
+Later workloads rapidly increase the number of unique users and quotes, exposing inefficiencies in different parts of the system that were often the result of optimizing a design for high transaction throughput for early workloads.
+
+This chapter outlines the often surprising manner in which our system failed as we progressed through the workloads, and the design changes that followed.
+Most often, the manner of failure was the result of an assumption that would be true at smaller scales but became invalid at a later point.
