@@ -1,4 +1,18 @@
+# R stuff
 .Rproj.user
 .Rhistory
 .RData
 .Ruserdata
+
+# latex stuff
+*.aux
+*.log
+*.bbl
+*.bcf
+*.blg
+*.out
+*.lot
+*.lof
+*.toc
+*.gz
+*.run.xml

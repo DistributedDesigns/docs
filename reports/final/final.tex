@@ -1,0 +1,197 @@
+%/////////////////////////////////////////////////////////%
+%//						PREAMBLE						//%
+%/////////////////////////////////////////////////////////%
+
+\documentclass[11pt]{report}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+% 	  Packages
+%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Fonts and Symbols
+%% --------------------------
+\usepackage{
+			amsmath,			% math operators
+			amssymb,			% math symbols
+			}
+
+%% Graphics
+%% --------------------
+\usepackage{
+			graphicx,			% allows insertion of images
+			subfigure,			% allows subfigures (a), (b), etc.
+			}
+\graphicspath{ {graphics/} }	% (graphicx) relative path to graphics folder
+
+%% Tables
+%% --------------------------
+\usepackage{
+			booktabs,			% better tables, discourages vertical rulings
+			multicol,			% allow multi columns
+			}
+
+%% Layout Alteration
+%% --------------------------
+\usepackage{
+			enumitem,			% indented items for glossary
+			framed,				% nice boxes; used in Supervisor's Approval
+			geometry,			% change the margins for specific PAGES
+			}
+\setlist[description]{style=nextline}
+\geometry{						% specify page size options for (geometry)
+			a4paper, 			% paper size
+			margin=1in,			% specified independently with hmargin vmargin
+		 }
+
+%% Units
+%% --------------------------
+\usepackage{
+			siunitx,			% has S (decimal align) column type
+			}
+\sisetup{input-symbols = { () },  % do not treat "(" and ")" in any special way
+         group-digits  = false, % no grouping of digits
+%		 load-configurations = abbreviations,
+%		 per-mode = symbol,
+		 }
+
+%% Misc
+%% --------------------------
+\usepackage{
+			pdfpages,			% import pdfs into this document -- used for the Letter
+			url,				% allows urls to be added to document
+			}
+
+%% Bibliography
+%% --------------------------
+\usepackage[
+	backend=biber,
+	style=ieee]
+{biblatex}
+\addbibresource{final.bib}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%
+% 	Environments
+%%%%%%%%%%%%%%%%%%%%%%%
+% Hides the formatting for the summary
+\newenvironment{Overview}
+	{ % beginning formatting
+		% manually add entry to the toc since section*
+		% suppresses addition to toc
+		\addcontentsline{toc}{chapter}{Overview}
+		\topskip0pt				% remove top padding
+		\vspace*{\stretch{2}}	% Pad 2/3 of the page length
+		\chapter*{Overview}		% don't append a chapter num before "Overview"
+	}
+	{ % end formatting
+		\vspace*{\stretch{3}}
+	}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%
+% Macros and Commands
+%%%%%%%%%%%%%%%%%%%%%%%
+
+% override S column type with centered text column
+\providecommand{\textcol}[1]{\multicolumn{1}{c}{#1}}
+
+% provides a place to write on documents; like __________________ that
+\providecommand{\blankline}[1]{\rule{#1}{0.5pt}}
+
+% Set up page numbering for appendices as (Appendix Letter) - (Page Number)
+\providecommand{\StartAppendices}{
+    \newpage
+    \newcounter{AppendixCounter}
+    \renewcommand{\thepage}{\Alph{AppendixCounter} \textendash\ \arabic{page}}
+}
+
+% Manually construct the section title for each appendix and then
+% add an entry to the ToC
+\providecommand{\Appendix}[1]{
+    \newpage
+    \stepcounter{AppendixCounter}
+    \setcounter{page}{1}
+    \chapter*{Appendix \Alph{AppendixCounter}\quad #1}
+    \addtocontents{toc}{\protect\contentsline{chapter}%
+    	{Appendix \Alph{AppendixCounter}\quad #1}{}}
+	% \protect preserves the spacing in the ToC
+}
+
+% Blank lines for marks on the title page
+\providecommand{\markline}{\rule{1cm}{0.5pt}}
+
+%/////////////////////////////////////////////////////////%
+%//						BODY							//%
+%/////////////////////////////////////////////////////////%
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+% 	  Title Page
+%%%%%%%%%%%%%%%%%%%%%%%
+\pagenumbering{gobble}		% turn off page numbering
+\include{sections/titlepage}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+%    Front matter
+%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\addtocontents{toc}{~\hfill\textbf{Page}\par}	% 'Page' above the page numbers
+\tableofcontents
+
+\newpage
+\pagenumbering{roman}	% i, ii, iii, ... page numbering
+\addcontentsline{toc}{chapter}{\listfigurename}	% manually add to toc
+\addtocontents{lof}{~\hfill\textbf{Page}\par}
+\listoffigures
+
+\newpage				% LoF and LoT may be on the same page if they fit
+\addcontentsline{toc}{chapter}{\listtablename}
+\addtocontents{lot}{~\hfill\textbf{Page}\par}
+\listoftables
+
+\input{sections/overview}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+%		Main Body
+%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\pagenumbering{arabic}	% 1, 2, 3, ... page numbering
+
+\input{sections/01-arch/intro}
+\input{sections/01-arch/original-arch}
+\input{sections/01-arch/planning}
+\input{sections/01-arch/final-arch}
+
+\input{sections/02-security/intro}
+
+\input{sections/03-test/intro}
+\input{sections/03-test/user-testing}
+
+\input{sections/04-fault/intro}
+
+\input{sections/05-perf/intro}
+\input{sections/05-perf/quotes}
+\input{sections/05-perf/scaling-workers}
+\input{sections/05-perf/cmd-dist}
+
+\input{sections/06-cap/intro}
+\input{sections/06-cap/log-throughput}
+\input{sections/06-cap/worker-loading}
+\input{sections/06-cap/quoteserver-scaling}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+% 	  Referrences
+%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\renewcommand*{\UrlFont}{\rmfamily} % preserve default font for URLs
+\printbibliography[heading=bibintoc,title={References}]
+
+%%%%%%%%%%%%%%%%%%%%%%%
+% 	  Back Matter
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\StartAppendices{}
+\include{sections/appendix}
+
+\end{document}
