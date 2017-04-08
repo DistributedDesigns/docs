@@ -18,3 +18,4 @@ Reports and other dev notes
   - [Triggers](./business_logic/business_logic.md#triggers)
 - [Reports](./reports/reports.md)
   - [Architecture](./reports/architecture/readme.md)
+  - [Final](./reports/final/final.pdf)
