@@ -77,9 +77,9 @@ Figure~\ref{fig:audit} shows how multiple \texttt{Event Catcher} workers remove 
 With this design, the 1000 user workload only reached a 20k backlog of messages and had no observed performance degradation.
 Although a run would finish in around \SI{45}{\second} it would be upwards of \SI{6}{\minute} to finish insertion into Postgres.
 When a message for a dumplog was processed it would display messages had successfully migrated to Postgres but was unaware of those still in Redis.
-This is a soft violation of the business requirement that a dumplog should show all transactions preceeding itself.
+This is a soft violation of the business requirement that a dumplog should show all transactions proceeding itself.
 We believe this is acceptable since, in actual use, there is no clear ``end of work'' to capture.
-All log messages will make it in to Postgres for querying so the requirent is \textit{eventually} satisfied.
+All log messages will make it into Postgres for querying so the requirement is \textit{eventually} satisfied.
 
 This method has an upper limit to its effectiveness since the Redis buffer could run out of storage space under periods of sustained high TPS.
 The boundary of the buffer memory was not encountered during any testing and we cannot speculate about its value.
@@ -90,11 +90,11 @@ Alternatively, we could induce a period of sustained high TPS by removing the re
 When the buffer method in~\ref{sec:log-buf} reaches its limit there are several possible development paths for proceeding forward:
 
 \begin{enumerate}
-  \item \textbf{Agglomerate messages}: Message traffic can be reduced by combining multiple log events into one message.
+  \item \textit{Agglomerate messages}: Message traffic can be reduced by combining multiple log events into one message.
 Workers would only emit messages for logging at fixed intervals or after a certain number of events (whichever comes first) and reduce the overhead associated with creating, sending and processing RMQ messages.
 The optimal message size would have to be determined through experiment.
-  \item \textbf{RMQ scaling}: RMQ is capable of its own distributed deployment.
+  \item \textit{RMQ scaling}: RMQ is capable of its own distributed deployment.
 Increasing resources available to the message bus would allow more messages to be stored before removal into the buffer.
-  \item \textbf{Robust message passing}: Apache's Kafka\footnote{\url{https://kafka.apache.org}} provides functionality similar to RMQ but is optimized for message storage and large backlogs.
+  \item \textit{Robust message passing}: Apache's Kafka\footnote{\url{https://kafka.apache.org}} provides functionality similar to RMQ but is optimized for message storage and large backlogs.
 This allows consumers to operate at different rates and removes the need to process log messages faster.
 \end{enumerate}
