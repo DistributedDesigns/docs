@@ -14,7 +14,7 @@ times <- times * 1000 # convert sec -> msec
 
 ```{r delay hist, echo=FALSE}
 h = hist(times$time, breaks = c(0, 1000, 2000, 3000, 4000, 5000), plot = F)
-h$density = h$density * 1e3 # change densities to percents
+h$density = h$counts / sum(h$counts) # change densities to percents
 plot(h,
      freq = F,
      col = "lightgreen",
