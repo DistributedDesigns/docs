@@ -29,6 +29,7 @@
 \usepackage{
 			booktabs,			% better tables, discourages vertical rulings
 			multicol,			% allow multi columns
+      multirow,     % allow multi rows
 			}
 
 %% Layout Alteration
@@ -124,7 +125,7 @@
     \newpage
     \stepcounter{AppendixCounter}
     \setcounter{page}{1}
-    \chapter*{Appendix \Alph{AppendixCounter}\quad #1}
+    \section*{Appendix \Alph{AppendixCounter}\quad #1}
     \addtocontents{toc}{\protect\contentsline{chapter}%
     	{Appendix \Alph{AppendixCounter}\quad #1}{}}
 	% \protect preserves the spacing in the ToC

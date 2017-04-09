@@ -1,1 +1,33 @@
 \section{Command execution time analysis}\label{sec:cmd-dist}
+In order to determine the performance of individual commands we created a fork of the worker that logged elapsed wall clock times for \textit{valid} commands.
+A valid command is properly formatted (e.g.\ no negative dollar amounts) and meets all account state pre-conditions.
+This assures a common execution path for results and prevents a multi-modal distribution caused by commands resolving early and avoiding lengthy inter-service communication delays.
+Results are summarized in Table~\ref{tbl:cmd-dist}.
+
+\begin{table}[htpb]
+  \centering
+  \caption[Command execution time percentiles]{Command execution times gathered from 3 runs of the 1000 user workload}
+  \label{tbl:cmd-dist}
+  \input{dist-table}
+\end{table}
+
+Command execution times show two general patterns.
+Commands that do not use stock prices as pre-conditions (e.g.\ \textsc{Add}, \textsc{Commit Buy}, \textsc{Set Sell Amount}) resolve at a median time of $\approx \SI{25}{\micro\second}$.
+Commands that do use stock prices resolve at a median time of $\approx \SI{220}{\micro\second}$.
+The order of magnitude slow down is the result of storing stock values externally (but locally) in Redis.
+The retrieval delay is costly but is countered by offloading quote TTL enforcement.
+
+There are several interesting anomalies in Table~\ref{tbl:cmd-dist}.
+The first is the paucity of data from \textsc{Sell} commands.
+This is because the set of pre-conditions is the largest for any command: the user must have already purchased stock \textit{and} chosen a sell amount that resolve for pseudo-random stock prices. 
+
+Next, the 99.99\% values for the non-stock, high-frequency commands increase by an order of magnitude compared to the 99.9\% values.
+Since execution of these commands doesn't involve any external services the delay is likely the result an ill-timed application garbage collection cycle.
+Since this delay doesn't manifest in the tails of the low-frequency events (e.g.\ \textsc{Cancel Sell}) the likelihood of being slowed by a garbage collection event is $\approx \frac{1}{30000}$.
+
+\textsc{Dumplog} data is largely uninformative, given the extremely small sample size.
+The execution time results from a path that necessarily interfaces with external services and is subject to communication delay.
+
+\textsc{Buy} and \textsc{Quote} do exhibit bi-modal behaviors despite the experiment setup.
+This is a result of quote cache hits and misses having execution times that differ by several orders of magnitude.
+Histograms for all of the commands are presented in Appendix\improvement{Manually insert the appendix number}.

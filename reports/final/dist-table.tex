@@ -1,0 +1,25 @@
+\begin{tabular}{lrrrrrr}
+\toprule
+\multicolumn{1}{c}{\multirow{2}{*}{Command}} & \multicolumn{1}{c}{\multirow{2}{*}{$n$}} & \multicolumn{5}{c}{Execution time percentile (\si{\micro\second})} \\
+\multicolumn{1}{c}{} & \multicolumn{1}{c}{} & \multicolumn{1}{c}{50\%} & \multicolumn{1}{c}{95\%} & \multicolumn{1}{c}{99\%} & \multicolumn{1}{c}{99.9\%} & \multicolumn{1}{c}{99.99\%}\\
+\midrule
+
+\textsc{Add}              & 168\,227 & 24.9      & 35.7      & 54.3      & 176.7      & 1\,977.6   \\
+\textsc{Buy}              & 197\,897 & 217.5     & 427.8     & 488.2     & 65\,650.4  & 230\,294.0 \\
+\textsc{Cancel Buy}       & 38\,812  & 25.7      & 36.0      & 53.9      & 189.3      & 2\,197.3   \\
+\textsc{Cancel Sell}      & 41       & 27.3      & 31.9      & 50.4      & 55.1       & 55.6     \\
+\textsc{Cancel Set Buy}   & 102\,925 & 21.5      & 30.8      & 46.8      & 169.5      & 1\,979.1   \\
+\textsc{Cancel Set Sell}  & 102\,642 & 21.5      & 30.8      & 46.8      & 177.8      & 1\,998.6   \\
+\textsc{Commit Buy}       & 121\,658 & 27.1      & 37.9      & 55.8      & 188.6      & 1\,996.4   \\
+\textsc{Commit Sell}      & 92       & 25.7      & 33.1      & 39.4      & 73.0       & 76.3     \\
+\textsc{Display Summary}  & 225\,298 & 21.3      & 30.2      & 45.9      & 161.9      & 1\,953.0   \\
+\textsc{Dumplog}          & 3        & 45\,754.6 & 45\,926.5 & 45\,941.8 & 45\,945.3  & 45\,945.6  \\
+\textsc{Quote}            & 355\,578 & 213.1     & 429.7     & 809.8     & 218\,334.6 & 293\,673.5 \\
+\textsc{Sell}             & 152      & 220.7     & 420.8     & 455.4     & 481.6      & 485.2    \\
+\textsc{Set Buy Amount}   & 238\,759 & 22.2      & 31.6      & 47.5      & 160.7      & 1\,986.2   \\
+\textsc{Set Buy Trigger}  & 229\,465 & 22.0      & 31.5      & 47.7      & 171.9      & 1\,972.5   \\
+\textsc{Set Sell Amount}  & 196\,997 & 22.1      & 31.6      & 47.9      & 164.4      & 1\,979.5   \\
+\textsc{Set Sell Trigger} & 190\,648 & 22.0      & 31.5      & 47.6      & 159.9      & 1\,982.9   \\
+
+\bottomrule
+\end{tabular}
