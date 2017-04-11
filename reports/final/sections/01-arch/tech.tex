@@ -1,0 +1,28 @@
+\section{Technology}
+
+\subsection{Golang}
+Golang was selected originally because it gives a lot of tools to maximize scalability, but is also very easy to learn and use efficiently. Golang’s idioms are relatively easy to learn and the architectural decisions Rob Pike made when bringing the language to fruition heavily favor the task at hand.
+
+Golang has extremely lightweight threading. It is possible to spawn thousands of threads in a golang instance without bogging down a system. New threads are made for goroutines, http request, etc, and are managed by the golang thread scheduler, not the OS. This allows for a lot of multithreaded benefit without a lot of the multithreaded headache. Golang goroutines and the producer/consumer model are very easily implemented. We wanted to utilize a language which was able to:
+
+\begin{itemize}
+  \item Efficiently scale
+  \item Work well with RMQ
+  \item Be easy to learn and fun to use.
+\end{itemize}
+
+Golang fulfills all of these categories. The idea of channels in golang is almost identical to the consumption of RabbitMQ channels, and was very easy to hook into the golang flow.
+
+Golang has the added benefit of being both type safe, and well supported by the community. The former makes it incredibly easy to debug and refactor code. The latter means that there are a whole set of profiling and testing tools available by default, so we did not have to go out and research what the best ones were.
+
+\subsection{RabbitMQ}
+We selected RabbitMQ early on as we wanted to do an event based system, and wanted to be able to communicate between components effortlessly. With an event based system, we wanted to utilize a communication protocol that would perform FIFO communication between microservices. Rabbit fills this need exactly, and the documentation is verbose enough that ramp up time is minimal. It is easily deployed with docker, and the management console is very easy to use and get a good picture of the system state. It also offers the ability to inject messages directly into queues and exchanges, as well as many other testing features.
+
+\subsection{Redis}
+Redis is a distributed, in memory key-value store that supports publish-subscribe events. We used Redis to provide caching for quotes, unhandled transactions and as a log message buffer. We used key TTLs to enforce quote validity windows. Although Redis operates as an in memory data store it writes changes to disk every sixty seconds in order to minimize data loss on system failure.
+
+\subsection{Postgres}
+Changes to user account state, retrieved quotes and user transactions are logged in a Postgres database for storage. Postgres offers full ACID compliance which allows the database to act as a ``source of fact'' for recreating the historical state of accounts in the system.
+
+\subsection{Websockets} 
+Websockets allow asynchronous communication between the frontend and backend system components. Data can be passed to a webpage without requiring a page reload or other user-triggered action. This allows asynchronous events, like pending buy expirations or the fulfillment of a sell trigger, to be brought to the user's attention immediately.

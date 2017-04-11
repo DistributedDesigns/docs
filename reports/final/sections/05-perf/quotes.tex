@@ -5,7 +5,7 @@ The legacy server is the greatest barrier to high command throughput and dozens 
 
 \subsection{Statistical analysis of legacy quote server}
 We sent a large number of serial requests to the quote server and recorded the response time with a shell script.
-Figure~\ref{fig:legacy-qs-hist} shows the distribution of response times follow an exponential distribution\improvement{do a goodness of fit test}{} with $65.75\%$ of responses experiencing only network delay.
+Figure~\ref{fig:legacy-qs-hist} shows the distribution of response times follow an exponential distribution with $65.75\%$ of responses experiencing only network delay.
 The expected value of the response time is \SI{563.3}{\milli\second}.
 
 \begin{figure}[tbph]
@@ -41,7 +41,7 @@ This backoff strategy requires six iterations to exceed the expected delay of \S
 Exceeding \SI{1}{\second} total delay has a likelihood of 0.0299\%.
 If the total timeout exceeds \SI{4}{\second} and there is still no response from the quote server then the service is assumed unreachable and the quote manager raises an error.
 
-\subsection{Timeout effectiveness}
+\subsection{Timeout effectiveness}\label{sec:timeout-effectiveness}
 We implemented the timeout strategy in~\ref{sec:qs-timeout} and gathered response time data directly from the quote manager.
 Figure~\ref{fig:retries} shows frequency of retry attempts before a quote resolved.
 Strangely, the distribution does not match that of Figure~\ref{fig:legacy-qs-hist} and the legacy quote server has an 89.35\% likelihood (instead of 65.75\%) of resolving in under \SI{20}{\milli\second}.

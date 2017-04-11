@@ -1,5 +1,6 @@
 \section{Quote manager scaling}
-The system's TPS grows almost $10\times$ once a full set of quotes has been retrieved. further increases to average TPS could be gained by decreasing the time spent fetching quotes.
+The system's TPS grows almost $10\times$ once a full set of quotes has been retrieved.
+Further increases to average TPS could be gained by decreasing the time spent fetching quotes.
 The methods in~\ref{sec:qs} brought the quote server response time to its lower limit so further efficiency could only come from horizontally scaling the quote managers.
 Intuitively, doubling the number of quote managers should decrease the total time to retrieve all quotes by half, provided the workload is split evenly.
 If only it were so simple.

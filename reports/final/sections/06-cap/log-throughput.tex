@@ -1,5 +1,6 @@
 \section{Logging throughput}
-The 1000 user workload was the first occasion for our system to operate at nominal TPS for a significant portion of its runtime\improvement{link to image with 100 v 1000 tps}.
+The 1000 user workload was the first occasion for our system to operate at nominal TPS for a significant portion of its runtime.
+
 Since each transaction needed to write at least one entry to the audit log the volume of log messages was unprecedented.
 Controlling the ``firehose'' of log messages was the most significant architectural redesign.
 It included several false starts and, ultimately, reached a workable but flawed solution.
@@ -68,7 +69,7 @@ The solution to this problem is to place a buffer between the producer and consu
 
 \begin{figure}[tbph]
   \centering
-  \includegraphics[width=0.95\linewidth]{graphics/audit}
+  \includegraphics[width=0.95\linewidth]{graphics/arch-audit}
   \caption{Buffered audit logger}
   \label{fig:audit}
 \end{figure}

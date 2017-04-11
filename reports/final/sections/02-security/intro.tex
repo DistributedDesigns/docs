@@ -1,2 +1,8 @@
 \chapter{Security}
-lol. just lol.
+Authentication is performed via a backend service which verifies the identity of the users as they create accounts. Once created, a websocket connection is established for each session. These are cycled upon every new session for a user, and are managed by a socket hub service on the backend. The authentication protocol is hand rolled to provide the utmost security, and is managed by a backend distributed user map. Since users are isolated to the worker at which they are balanced to, hijacking a user account is impossible unless you are randomly distributed onto the worker in which the user resides. Furthermore, no confirmation is given as to whether a user account exists upon a failed password, so a rainbow tables password attack could in theory take an infinite amount of time.
+
+These features were rigorously user tested across single and multiple instances. Password attacks were ran, and the only vulnerability discovered was the standard entropy password vulnerability, where the length of time raises exponentially with the number of characters in the password.
+
+In the real would, certs would be used and additionally user credentials would be salted and hashed. These credentials would be stored in a secure database.
+
+The system is audited by logging all of the user commands, including the user who initiated a dumplog. Through extremely thorough logging we're able to identify not only the root cause of any problem that can occur with the system, but also to perform vulnerability checks and inspections. In the future real time fraud prevention machine learning models could be applied to the authentication logs to ascertain what constitutes an attack.
