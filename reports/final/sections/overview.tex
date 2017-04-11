@@ -1,6 +1,7 @@
 \begin{Overview}
 
-The goal of the project was to build a distributed day trading system, with a focus on performance. The client original stated the following actions as business requirements:
+The goal of the project was to build a distributed day trading system, with a focus on performance.
+The client original stated the following actions as business requirements:
 
 \begin{itemize}
   \item View their account
@@ -15,7 +16,7 @@ The goal of the project was to build a distributed day trading system, with a fo
   \item Commit a transaction
 \end{itemize} 
 
-Additionally, the overall architectural goals of the system were:
+\noindent Additionally, the overall architectural goals of the system were:
 \begin{itemize}
   \item Minimum transaction processing times. 
   \item Full support for required features. 
@@ -34,15 +35,32 @@ We identified and corrected performance bottlenecks in the quote retrieval metho
 Current analysis indicates that total TPS will scale linearly with the number of workers, however the total throughput of the system is limited by the method for distributing transactions within the system.
 
 
-We were able to accomplish all of the business and technical requirements laid out by DayTrading Inc, as well as our personal objectives for the system. We built an event based system utilizing the frameworks, tools, and language that we originally planned. Slight modification of the system occurred throughout the design process, but in general the planned architecture stayed relatively the same throughout the entire implementation. Golang proved to be an excellent choice for the system based on its speed, ease of user, and idiomatic patterns which lined up extremely well with an event sourcing framework like RabbitMQ. Rabbit and Redis also worked extremely well, and proved to be both fast and durable when it came to transactions per second and fault tolerance. Websockets proved to be a great way to send the event sourced data back to the frontend, since websockets is again an event sourced pattern for web communications. While relatively simple to setup, the handshaking and setting up of the socket hub proved to be a little bit complex to sort out. The original handshake system functioned for basic testing, but when simulated over multiple users, the socket hub would crash. The addition of mutexes solved this issue without much drain on performance for socket initialization and tracking.
+We were able to accomplish all of the business and technical requirements laid out by DayTrading Inc, as well as our personal objectives for the system.
+We built an event based system utilizing the frameworks, tools, and language that we originally planned.
+Slight modification of the system occurred throughout the design process, but in general the planned architecture stayed relatively the same throughout the entire implementation.
+Golang proved to be an excellent choice for the system based on its speed, ease of user, and idiomatic patterns which lined up extremely well with an event sourcing framework like RabbitMQ.
+Rabbit and Redis also worked extremely well, and proved to be both fast and durable when it came to transactions per second and fault tolerance.
+Websockets proved to be a great way to send the event sourced data back to the frontend, since websockets is again an event sourced pattern for web communications.
+While relatively simple to setup, the handshaking and setting up of the socket hub proved to be a little bit complex to sort out.
+The original handshake system functioned for basic testing, but when simulated over multiple users, the socket hub would crash.
+The addition of mutexes solved this issue without much drain on performance for socket initialization and tracking.
 
-Testing was performed with a combination of manual and automated testing, along with continuous integration testing, unit testing critical components, and manual testing of business logic and SLA compliance. This proved to be an effective method for ensuring code quality.  Further automated unit testing, integration testing, and  regression testing would likely have cut down on development time, the strategy used proved to be adequate for the needs.  The inclusion of the RabbitMQ management console, a fake quote server, and a comprehensive logging repository proved to drastically simplify and streamline the manual testing process, and proved to meet the needs of the developers.
+Testing was performed with a combination of manual and automated testing, along with continuous integration testing, unit testing critical components, and manual testing of business logic and SLA compliance.
+This proved to be an effective method for ensuring code quality.
+Further automated unit testing, integration testing, and  regression testing would likely have cut down on development time, the strategy used proved to be adequate for the needs.
+The inclusion of the RabbitMQ management console, a fake quote server, and a comprehensive logging repository proved to drastically simplify and streamline the manual testing process, and proved to meet the needs of the developers.
 
-The systems fault tolerant behavior is derived from its event sourcing pattern. By auditing logging the system, we are able to keep track of which events should exist on which worker, and if a worker is to go down, we can replay those events back onto a new or existing instance, recovering the complete user state of the account. A variety of other fault tolerant measures were implemented, including compile time type safety to minimize runtime errors.
+The systems fault tolerant behavior is derived from its event sourcing pattern.
+By auditing logging the system, we are able to keep track of which events should exist on which worker, and if a worker is to go down, we can replay those events back onto a new or existing instance, recovering the complete user state of the account.
+A variety of other fault tolerant measures were implemented, including compile time type safety to minimize runtime errors.
 
-A variety of security features were implemented to protect the user's information and the system’s functionality. Post requests for actions are sanitized to ensure that only correct commands will make it into Redis, and are then again checked when they leave Redis to be consumed by the worker. We also maintain a layer of random security by never revealing which worker the account exists on. If a user was to attack a worker, they could in theory try forever since the account may or may not exist on that instance.
+A variety of security features were implemented to protect the user's information and the system’s functionality.
+Post requests for actions are sanitized to ensure that only correct commands will make it into Redis, and are then again checked when they leave Redis to be consumed by the worker.
+We also maintain a layer of random security by never revealing which worker the account exists on.
+If a user was to attack a worker, they could in theory try forever since the account may or may not exist on that instance.
 
-Additional improvements to the system have been outlined, and could be implemented given more time for the project. While the deadline was reached with all requirements fulfilled, there is still much improving that could be done to the system to make it harder, better, faster, stronger.
+Additional improvements to the system have been outlined, and could be implemented given more time for the project.
+While the deadline was reached with all requirements fulfilled, there is still much improving that could be done to the system to make it harder, better, faster, stronger.
 
 
 \end{Overview}
