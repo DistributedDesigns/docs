@@ -1,1 +1,10 @@
 \chapter{Fault tolerance}
+The system is fault tolerant through a variety of safety measures.
+
+First of all, user information can be recovered using the audit logger. While the user information is not stored in a persistent database on the worker, the audit logger logs all actions in a centralized postgres database. Should a worker go down, the system can identify the point at which the worker spun up, and the point at which it went dark, and offload all the users onto a new or existing worker.
+
+Another feature for fault tolerance is the utilization of a compiled, typesafe language. By doing this, we can eliminate an order of magnitude more runtime errors than in a interpreted language. By utilizing golang’s compiled type safety, we know there will not be any type mismatching that would cause the system to crash during runtime.
+
+Finally, the distributed nature of the system allows for some natural fault tolerance. Users will simply be routed to whichever workers are available, and will never know if there is one worker running or twenty. 
+
+Rabbit and Redis are both durable, which means they are persistent over failure. If a worker or a service goes down, the messages will simply stack up to be consumed when a new worker comes to take its place, or the user accounts are offloaded to a different worker.

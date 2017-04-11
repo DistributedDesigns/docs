@@ -1,0 +1,8 @@
+\section{Manual testing}
+The majority of testing time was spent on extensive manual testing.  All pull requests were manually tested at least twice, once by the author, once by a reviewer.  Manual testing primarily focused on ensuring that business logic was upheld, and that bad inputs were handled correctly.  Since Rabbit was used for the queue that the worker would pull all of its data and workload from, testing was simply a matter of pushing test cases to the queue.  Sample workload files were created to run the worker against, and the output of the worker would then be compared against the correct output file.
+
+The inclusion of an extensive hand rolled logging library into the codebase also made manual testing significantly easier; console output could be broken down into multiple levels such as debug, critical, info and others.  This allowed for very simple debugging as debug statements could be embedded throughout the code and suppressing them at run time was simply a matter of increasing the displayed log level.
+
+Another factor in simplifying our testing was the fake quote server.  Complete control over what quotes were returned allowed for consistent reproduction of bugs, as well as creation of specific test scenarios that could break or stress test our product.
+
+Many test scenarios were run at all stages of development.  Primary focus was on ensuring the critical business functions all performed as expected and according to the SLA.  Specific workload files to test various buy, sell, and auto transaction cases were created and run on the system multiple times to ensure no failures or SLA violations.
